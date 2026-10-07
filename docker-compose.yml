@@ -1,0 +1,23 @@
+services:
+  agenda:
+    build: .
+    container_name: agenda-famiglia
+    restart: unless-stopped
+    ports:
+      - "8080:8080"      # se Caddy è sullo stesso server puoi usare "127.0.0.1:8080:8080"
+    environment:
+      PEOPLE: "${PEOPLE:-Mamma,Papà}"   # nomi, separati da virgola (si cambiano nel file .env)
+      TZ: "Europe/Rome"
+      # Orari dei promemoria (facoltativi):
+      # REMINDER_DAYS_BEFORE: "7"     # avviso anticipato: quanti giorni prima (7 = una settimana, 0 = spento)
+      # REMINDER_DAYS_HOUR: "9"       # a che ora arriva l'avviso anticipato
+      # REMINDER_EVENING_HOUR: "18"   # avviso "domani" la sera prima
+      # REMINDER_MORNING_HOUR: "8"    # avviso mattina per appuntamenti senza orario
+      # REMINDER_HOURS_BEFORE: "2"    # avviso x ore prima per appuntamenti con orario
+    volumes:
+      - ./data:/data
+    # Se Caddy gira in Docker, togli "ports" e metti entrambi sulla stessa rete, es.:
+    # networks: [proxy]
+# networks:
+#   proxy:
+#     external: true
